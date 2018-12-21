@@ -103,6 +103,43 @@ class UI {
     this.expenseList.appendChild(div);
   }
 
+  // Edit expense
+  editExpense(element) {
+    let id = Number(element.dataset.id);
+    let parent = element.parentElement.parentElement.parentElement;
+
+    // remove from dom
+    this.expenseList.removeChild(parent);
+
+    // remove from the list
+    let expense = this.itemList.filter(item => item.id === id);
+
+    // show value;
+    this.expenseInput.value = expense[0].title;
+    this.amountInput.value = expense[0].amount;
+
+    // remove from list
+    let tempList = this.itemList.filter(item => {
+      return item.id !== id;
+    });
+    this.itemList = tempList;
+    this.showBalance();
+  }
+  // Delete expense
+  deleteExpense(element) {
+    let id = Number(element.dataset.id);
+    let parent = element.parentElement.parentElement.parentElement;
+
+    // remove from dom
+    this.expenseList.removeChild(parent);
+    // remove from list
+    let tempList = this.itemList.filter(item => {
+      return item.id !== id;
+    });
+    this.itemList = tempList;
+    this.showBalance();
+  }
+
   totalExpense() {
     let total = 0;
     if (this.itemList.length > 0) {
@@ -132,7 +169,14 @@ function eventListeners() {
     ui.submitExpenseForm();
   });
   //expense list submit
-  expenseList.addEventListener("click", e => {});
+  expenseList.addEventListener("click", e => {
+    if (e.target.parentElement.classList.contains("edit-icon")) {
+      ui.editExpense(e.target.parentElement);
+    }
+    if (e.target.parentElement.classList.contains("delete-icon")) {
+      ui.deleteExpense(e.target.parentElement);
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
